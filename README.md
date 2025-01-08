@@ -48,7 +48,7 @@ For the MVP phase, the following core features have been implemented based on th
 - Java 17 or later
 - Maven (for dependency management)
 - Spring Boot Framework
-- MySQL (or your preferred database)
+- MySQL
 - Postman (for API testing)
 
 ---
