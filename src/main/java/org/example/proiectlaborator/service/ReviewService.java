@@ -24,9 +24,7 @@ public class ReviewService {
 
     public Review addReviewToEvent(Integer eventId, ReviewDto reviewDto) {
         var review = reviewRepository.save(reviewUtil.fromDtoToReview(eventId, reviewDto));
-
         eventService.updateRating(eventId);
-
         return review;
     }
 

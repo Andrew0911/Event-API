@@ -9,6 +9,8 @@ import org.example.proiectlaborator.repository.OrganizerRepository;
 import org.example.proiectlaborator.repository.VenueRepository;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 
 @Component
@@ -26,6 +28,11 @@ public class EventUtil {
 
         var venue = venueRepository.findById(eventDto.getVenueId())
                                    .orElseThrow(() -> new GeneralException("Venue with ID " + eventDto.getVenueId() + " not found."));
+
+
+        if(isDateInPast(eventDto.getDate())){
+            throw new GeneralException("The event date must be a future date.");
+        }
 
         if(eventDto.getTicketNumber() > venue.getCapacity()) {
             throw new GeneralException("Requested ticket quantity exceeds the venue's capacity of " + venue.getCapacity() + " tickets.");
@@ -54,5 +61,15 @@ public class EventUtil {
             throw new GeneralException("Tickets for this event are no longer available.");
         }
     }
+
+    public boolean isDateInPast(String inputDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        LocalDate givenDate = LocalDate.parse(inputDate, formatter);
+        LocalDate currentDate = LocalDate.now();
+
+        return givenDate.isBefore(currentDate);
+    }
+
 
 }
