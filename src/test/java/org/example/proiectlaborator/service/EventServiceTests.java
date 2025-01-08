@@ -1,14 +1,17 @@
 package org.example.proiectlaborator.service;
 
+import org.example.proiectlaborator.dto.EventDto;
 import org.example.proiectlaborator.model.Event;
+import org.example.proiectlaborator.model.Organizer;
+import org.example.proiectlaborator.model.Venue;
 import org.example.proiectlaborator.repository.EventRepository;
+import org.example.proiectlaborator.utils.EventUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -22,6 +25,9 @@ public class EventServiceTests {
 
     @InjectMocks
     private EventService eventService;
+
+    @Mock
+    private EventUtil eventUtil;
 
     @Test
     void testListEvent() {
@@ -50,27 +56,60 @@ public class EventServiceTests {
         verify(eventRepository).findAllByDate(date);
     }
 
-//    @Test
-//    void testAddEvent() {
-//        var eventDto = EventDto.builder()
-//                .name("Event 1")
-//                .baseTicketPrice(100.0)
-//                .date("03-03-2025")
-//                .hour("12:00")
-//                .description("Description")
-//                .organizerId(1)
-//                .venueId(1)
-//                .ticketNumber(200)
-//                .build();
-//
-//        var eventUtil = new EventUtil(organizerRepository, venueRepository, eventRepository);
-//        var event = eventUtil.fromDtoToEvent(eventDto);
-//
-//        when(eventRepository.save(event)).thenReturn(event);
-//
-//        var result = eventService.addEvent(eventDto);
-//
-//        assertEquals(eventDto.getName(), result.getName());
-//        verify(eventRepository).save(event);
-//    }
+    @Test
+    void testAddEvent() {
+        var eventDto = EventDto.builder()
+                .name("Event 1")
+                .baseTicketPrice(100.0)
+                .date("03-03-2025")
+                .hour("12:00")
+                .description("Description")
+                .organizerId(1)
+                .venueId(1)
+                .ticketNumber(200)
+                .build();
+
+        var organizer = Organizer.builder()
+                .id(1)
+                .name("Organizer")
+                .contactInfo("Contact Info")
+                .build();
+
+        var venue = Venue.builder()
+                .id(1)
+                .name("Venue")
+                .location("Location")
+                .capacity(10000)
+                .build();
+
+        var mockEvent = Event.builder()
+                .id(1)
+                .name("Event 1")
+                .baseTicketPrice(100.0)
+                .ticketPrice(100.0)
+                .date("03-03-2025")
+                .hour("12:00")
+                .description("Description")
+                .organizer(organizer)
+                .venue(venue)
+                .rating(0)
+                .ticketNumber(200)
+                .build();
+
+        when(eventUtil.fromDtoToEvent(eventDto)).thenReturn(mockEvent);
+        when(eventRepository.save(mockEvent)).thenReturn(mockEvent);
+
+        var result = eventService.addEvent(eventDto);
+
+        assertEquals("Event 1", result.getName());
+        assertEquals("Description", result.getDescription());
+        assertEquals(100, result.getBaseTicketPrice());
+        assertEquals(100, result.getTicketPrice());
+        /// .....
+
+        verify(eventUtil).fromDtoToEvent(eventDto);
+        verify(eventRepository).save(mockEvent);
+
+    }
+
 }

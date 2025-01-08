@@ -43,6 +43,7 @@ public class VenueServiceTests {
                 .build();
 
         var mockVenue = Venue.builder()
+                .id(1)
                 .name("Venue")
                 .location("Location")
                 .capacity(1000)

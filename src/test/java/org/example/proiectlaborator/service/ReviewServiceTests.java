@@ -3,13 +3,13 @@ package org.example.proiectlaborator.service;
 import org.example.proiectlaborator.dto.ReviewDto;
 import org.example.proiectlaborator.model.Review;
 import org.example.proiectlaborator.repository.ReviewRepository;
+import org.example.proiectlaborator.utils.ReviewUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,6 +26,9 @@ public class ReviewServiceTests {
 
     @InjectMocks
     private ReviewService reviewService;
+
+    @Mock
+    private ReviewUtil reviewUtil;
 
     @Test
     void testDeleteReview() {
@@ -87,6 +90,35 @@ public class ReviewServiceTests {
         assertEquals("Review 2", result.get(1).getComment());
 
         verify(reviewRepository, times(1)).findAllByEvent_Id(eventId);
+    }
+
+    @Test
+    void testAddReviewToEvent() {
+
+        Integer eventId = 1;
+
+        var reviewDto = ReviewDto.builder()
+                .comment("Comment")
+                .rating(5)
+                .build();
+
+        var mockReview = Review.builder()
+                .id(1)
+                .comment("Comment")
+                .rating(5)
+                .build();
+
+        when(reviewUtil.fromDtoToReview(eventId, reviewDto)).thenReturn(mockReview);
+        when(reviewRepository.save(mockReview)).thenReturn(mockReview);
+
+        var result = reviewService.addReviewToEvent(eventId, reviewDto);
+
+        assertEquals("Comment", result.getComment());
+        assertEquals(5, result.getRating());
+
+        verify(reviewUtil).fromDtoToReview(eventId, reviewDto);
+        verify(reviewRepository).save(mockReview);
+
     }
 
 }

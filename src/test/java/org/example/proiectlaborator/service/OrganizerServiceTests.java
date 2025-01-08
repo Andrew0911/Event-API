@@ -42,6 +42,7 @@ public class OrganizerServiceTests {
                 .build();
 
         var mockOrganizer = Organizer.builder()
+                .id(1)
                 .name("Organizer")
                 .contactInfo("Contact Info")
                 .build();
