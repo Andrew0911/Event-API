@@ -39,7 +39,7 @@ For the MVP phase, the following core features have been implemented based on th
    - Attendees can leave reviews within the specified 7-day window and update or delete them as needed.
 
 5. **Organizer and Venue Management**:
-   - Admins can add or remove organizers and venues, ensuring proper cascading deletions.
+   - Organizers and venues cand be added or deleted, ensuring proper cascading deletions.
 
 ---
 
